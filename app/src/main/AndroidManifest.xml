@@ -19,10 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddTaskActivity" android:windowSoftInputMode="stateAlwaysVisible"></activity>
+        <activity android:name=".AddTaskActivity" android:windowSoftInputMode="adjustResize" ></activity>
     </application>
-
-
-
 
 </manifest>

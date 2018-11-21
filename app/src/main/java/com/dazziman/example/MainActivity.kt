@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.support.design.widget.FloatingActionButton
-
+import android.util.Log
 
 
 class MainActivity : AppCompatActivity()
@@ -38,9 +38,14 @@ class MainActivity : AppCompatActivity()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ADD_TASK_REQUEST && resultCode == Activity.RESULT_OK) {
-            val task = Task(data?.getStringExtra(DESCRIPTION_TEXT).orEmpty())
-            data?.getStringExtra(DESCRIPTION_TEXT).orEmpty()
-            adapter.addTask(task)
+            val task = Task(data?.getStringExtra(TITLE_TEXT).orEmpty(), data?.getStringExtra(DESCRIPTION_TEXT).orEmpty())
+            val isEdit = data?.getBooleanExtra(IS_EDIT, false)
+            if(isEdit == true) {
+                val listIndex = data?.getIntExtra(EDIT_INDEX, WRONG_INDEX)
+                editTask(listIndex!!, task)
+            } else {
+                adapter.addTask(task)
+            }
         }
     }
 
@@ -103,10 +108,23 @@ class MainActivity : AppCompatActivity()
         adapter.notifyDataSetChanged()
     }
 
+    fun editTask(index: Int, task: Task)
+    {
+        adapter.tasks.set(index, task)
+        adapter.notifyDataSetChanged()
+    }
+
     // Java static과 동일하게 사용 가능
     companion object {
-        private val ADD_TASK_REQUEST = 0
-        val DESCRIPTION_TEXT = "description"
+        val ADD_TASK_REQUEST                        = 0
+        val WRONG_INDEX                             = -1
+
+        val TITLE_TEXT                              = "TITLE"                                       //액티비티 이동간 Task Tile Text
+        val DESCRIPTION_TEXT                        = "DESCRIPTION"                                 //Task Description Text
+        val DATA_TASK                               = "DATA_TASK"                                   //Task Instance
+        val IS_EDIT                                 = "IS_EDIT"                                     //
+        val EDIT_INDEX                              = "EDIT_INDEX"
+
     }
 }
 
